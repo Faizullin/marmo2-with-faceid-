@@ -1,0 +1,21 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<h2>История пройденных тестов</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Результат</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in test_results %}
+        <tr>
+            <td>{{ result.date_taken }}</td>
+            <td>{{ result.score }}/{{ result.total_questions }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

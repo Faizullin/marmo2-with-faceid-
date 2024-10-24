@@ -1,0 +1,53 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<div class="container mt-4" style="background-color: white; padding: 20px; border-radius: 8px;">
+    <h2>Курс бойынша статистика: {{ course.name }}</h2>
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Қолданушылар саны</th>
+            <th>Соңғы қолданушының тіркелген уақыты</th>
+            <th>Дәрістер саны</th>
+            <th>Курсты аяқтау деңгейі</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ applied_users_count }}</td>
+            <td>{{ last_applied_user_time }}</td>
+            <td>{{ lectures_count }}</td>
+            <td>-</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Қолданушының аты</th>
+            <th>Тіркелу уақыты</th>
+            <th>Аяқталған дәрістер саны</th>
+            <th>Орташа тест нәтижесі</th>
+            <th>Толық ақпарат</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for data in completed_lectures_data %}
+        <tr>
+            <td>{{ data.user.username }}</td>
+            <td>{{ data.applied_at }}</td>
+            <td>{{ data.completed_lectures_count }}</td>
+            <td>{{ data.average_best_score|default:"-" }}</td>
+            <td>
+                <a href="{% url 'user_lecture_statistics' course.id data.user.id %}">Нәтижелерді қарау</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</div>
+{% endblock %}

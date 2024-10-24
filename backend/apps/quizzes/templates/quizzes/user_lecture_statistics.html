@@ -1,0 +1,47 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<div class="container mt-4" style="background-color: white; padding: 20px; border-radius: 8px;">
+    <h2>{{ user.username }} үшін {{ course.name }} курсы бойынша дәрістердің статистикасы</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Дәрістің аты</th>
+                <th>Сақталған нәтиже</th>
+                <th>Тест нәтижесі</th>
+                <th>Аяқталу күні</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stat in lecture_stats %}
+            <tr>
+                <td>{{ stat.lecture.title }}</td>
+                <td>
+                    {% if stat.attempts.exists %}
+                        {% for attempt in stat.attempts %}
+                            <p>Сақталған нәтиже: {{ attempt.score }}% ({{ attempt.completed_at }})</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>Тест тапсырылмаған</p>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if stat.attempts.exists %}
+                        {{ stat.attempts.last.score }}%
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if stat.attempts.exists %}
+                        {{ stat.attempts.last.completed_at }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

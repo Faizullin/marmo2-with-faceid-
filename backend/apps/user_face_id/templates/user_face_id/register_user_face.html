@@ -1,0 +1,120 @@
+{% extends 'user_face_id/base.html' %}
+
+{% block title %}Биометрия жүктеу процесі{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="card-title mb-0">Биометрия жүктеу процесі</h2>
+                </div>
+                <div class="card-body text-center">
+                    <h5 class="mb-4 text-muted">Фотосурет ортасында нақты бір адамның беті болуы керек</h5>
+
+                    <!-- Бейне ағыны -->
+                    <div class="video-container mb-3">
+                        <video id="video" class="border rounded" width="100%" height="auto" autoplay></video>
+                    </div>
+
+                    <!-- Түсіру түймесі -->
+                    <button id="capture-btn" class="btn btn-lg btn-primary mb-3" onclick="startProcess()">
+                        Суретті түсіру
+                    </button>
+
+                    <!-- Жасырын кенеп, суреттерді өңдеу үшін -->
+                    <canvas id="canvas" width="400" height="300" style="display:none"></canvas>
+
+                    <!-- Статус хабарламасы -->
+                    <p id="status" class="text-muted">Нұсқаулар күтілуде...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const user_id = '{{ user.id }}';
+  const CUrls = {
+    ws_user_face_id_register: '{{ ws_user_face_id_register }}'
+  };
+
+  const ws = new WebSocket(CUrls.ws_user_face_id_register + "?user_id=" + user_id);
+
+  // Бейне элементі мен кенепті алу
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const statusText = document.getElementById('status');
+  const captureButton = document.getElementById('capture-btn');
+    
+  var currentStep = "initial";
+
+  // Параметрлерді алу
+  function getUrlParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+  }
+
+  // Веб-камераға қол жеткізу
+  navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+    video.srcObject = stream;
+  });
+
+  ws.onopen = function (ws) {
+    console.log('onopen')
+    captureButton.disabled = false; 
+  }
+  
+  ws.onerror = function (error) {
+    console.log('onerror: ', error)
+  }
+  
+  // WebSocket хабарламаны өңдеу
+  ws.onmessage = function (event) {
+    const data = JSON.parse(event.data)
+    console.log(data)
+    if (data['status'] === 'success') {
+      if (data['next_step']) {
+        currentStep = data['next_step'].value;
+        statusText.textContent = `Келесі қадам: ${data['next_step'].label}`;
+        setTimeout(captureImage, 1000);
+      } else if (currentStep === 'register') {
+        window.location.href = "/"
+      }
+    } else if (data['status'] === 'error') {
+      console.error('Қате: ' + (data['message'] || data))
+      alert('Қате: ' + (data['message'] || 'Белгісіз қате орын алды'));
+      // captureButton.disabled = false;
+    } else {
+      console.error('Қате: Анықталмаған мәліметтер күйі')
+    }
+  }
+
+  captureButton.disabled = true; 
+
+  // Түсіру процесін бастау
+  function startProcess() {
+    captureButton.disabled = true; 
+    captureButton.textContent = 'Өңделуде...';
+    captureImage(); // Алғашқы суретті түсіруден бастау
+  }
+  
+  // Видеодан суретті түсіру
+  function captureImage() {
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+    const image = canvas.toDataURL('image/jpeg')
+    ws.send(
+      JSON.stringify({
+        step: currentStep,
+        image: image
+      })
+    )
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "users/base.html" %}
+{% block title %}{{ course.name }}{% endblock %}
+{% block content %}
+    <style>
+        .card-body {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .card-body .lecture-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .lecture-actions form {
+            margin: 0;
+            display: inline-block;
+        }
+
+        .btn-delete {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin-left: 10px;
+        }
+
+        .btn-delete .btn-danger {
+            padding: 5px 10px;
+        }
+
+        .btn-delete {
+            margin: 0;
+            padding: 0;
+            border: none;
+            background: none;
+        }
+
+    </style>
+
+    <div class="container my-3">
+        <div style="background-color: white;">
+            <h2>{{ course.name }}</h2>
+            <p style="font-size: 20px">{{ course.description|linebreaksbr }}</p>
+        </div>
+
+
+
+        {% for lecture in course.lectures.all %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h4>{{ lecture.title }}</h4>
+                    <p>{{ lecture.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'take_lecture_page' course.id lecture.id 1 %}" class="btn btn-primary">Дәрістен
+                            өту</a>
+                        {% if request.user == course.creator %}
+                            <div class="lecture-actions d-flex" style="align-items: center; margin-left: 35%;">
+                                <a href="{% url 'edit_lecture' course.id lecture.id %}" class="btn btn-secondary mr-2">Дәрісті
+                                    өзгерту</a>
+                                <a href="{% url 'manage_lecture_test' course.id lecture.id %}"
+                                   class="btn btn-secondary mr-2">Тестті өзгерту</a>
+                                <button onclick="deleteLecture({{ course.id }}, {{ lecture.id }})"
+                                        class="btn btn-danger" style="align-items: center;">Жою
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {% if request.user == course.creator %}
+            <a href="{% url 'add_lecture' course.id %}" class="btn btn-primary">Дәріс қосыңыз</a>
+            <a href="{% url 'edit_course' course.id %}" class="btn btn-secondary">Курсты өзгерту</a>
+            <a href="{% url 'edit_survey' course.id %}" class="btn btn-warning">Сауалнаманы өзгерту</a>
+            <a href="{% url 'course_statistics' course.id %}" class="btn btn-info mr-2">Статистика</a>
+            <button onclick="deleteCourse({{ course.id }})" class="btn btn-danger">Курсты жою</button>
+        {% endif %}
+
+
+    </div>
+
+    <script>
+        function deleteLecture(courseId, lectureId) {
+            if (confirm("Вы уверены, что хотите удалить эту лекцию?")) {
+                fetch(`/quizzes/course/${courseId}/lecture/${lectureId}/delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            alert("Не удалось удалить лекцию. Попробуйте еще раз.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка:', error);
+                        alert("Произошла ошибка. Попробуйте еще раз.");
+                    });
+            }
+        }
+
+        function deleteCourse(courseId) {
+            if (confirm("Вы уверены, что хотите удалить этот курс?")) {
+                fetch(`/quizzes/course/${courseId}/delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = "{% url 'course_list' %}";
+                        } else {
+                            alert("Не удалось удалить курс. Попробуйте еще раз.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка:', error);
+                        alert("Произошла ошибка. Попробуйте еще раз.");
+                    });
+            }
+        }
+    </script>
+{% endblock %}

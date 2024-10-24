@@ -1,0 +1,81 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Создать Лекцию</h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ quiz_form.title.label_tag }}
+        {{ quiz_form.title }}
+    </div>
+    <div class="form-group">
+        {{ quiz_form.description.label_tag }}
+        {{ quiz_form.description }}
+    </div>
+    <div class="form-group">
+        {{ quiz_form.conspect.label_tag }}
+        {{ quiz_form.conspect }}
+    </div>
+    <div class="form-group">
+        {{ quiz_form.video_conspect.label_tag }}
+        {{ quiz_form.video_conspect }}
+    </div>
+    <div class="form-group">
+        {{ quiz_form.image.label_tag }}
+        {{ quiz_form.image }}
+    </div>
+
+    <div id="questions"></div>
+
+    <!-- Management form to handle total number of forms -->
+    <div style="display:none;">
+        {{ formset.management_form }}
+    </div>
+
+    <!-- Hidden template for new question forms -->
+    <div id="empty-form-template" style="display:none;">
+        <div class="question-form card mb-3">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="id_questions-__prefix__-text">Вопрос:</label>
+                    <input type="text" name="questions-__prefix__-text" class="form-control" id="id_questions-__prefix__-text">
+                </div>
+                <div class="form-group">
+                    <label for="id_questions-__prefix__-option1">Вариант 1:</label>
+                    <input type="text" name="questions-__prefix__-option1" class="form-control" id="id_questions-__prefix__-option1">
+                </div>
+                <div class="form-group">
+                    <label for="id_questions-__prefix__-option2">Вариант 2:</label>
+                    <input type="text" name="questions-__prefix__-option2" class="form-control" id="id_questions-__prefix__-option2">
+                </div>
+                <div class="form-group">
+                    <label for="id_questions-__prefix__-option3">Вариант 3:</label>
+                    <input type="text" name="questions-__prefix__-option3" class="form-control" id="id_questions-__prefix__-option3">
+                </div>
+                <div class="form-group">
+                    <label for="id_questions-__prefix__-option4">Вариант 4:</label>
+                    <input type="text" name="questions-__prefix__-option4" class="form-control" id="id_questions-__prefix__-option4">
+                </div>
+                <div class="form-group">
+                    <label for="id_questions-__prefix__-correct_option">Правильный вариант:</label>
+                    <select name="questions-__prefix__-correct_option" class="form-control" id="id_questions-__prefix__-correct_option">
+                        <option value="" selected>---------</option>
+                        <option value="1">Вариант 1</option>
+                        <option value="2">Вариант 2</option>
+                        <option value="3">Вариант 3</option>
+                        <option value="4">Вариант 4</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-danger delete-question-btn">Удалить вопрос</button>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" id="add-question-btn" class="btn btn-secondary">Добавить вопрос</button>
+    <button type="submit" class="btn btn-primary">Создать Лекцию</button>
+</form>
+
+<!-- Include the script.js file -->
+<script src="{% static 'quizzes/js/script.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-center">Тест нәтижелері: {{ lecture.title }}</h2>
+  <table class="table table-striped mt-4">
+    <thead>
+      <tr>
+        <th>Сұрақ</th>
+        <th>Сіздің жауабыңыз</th>
+        <th>Дұрыс жауап</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for question in questions %}
+      <tr>
+        <td>{{ question.text }}</td>
+        <td>
+          {% for answer in user_answers %}
+            {% if answer.question == question %}
+              {{ answer.selected_option }}
+            {% endif %}
+          {% endfor %}
+        </td>
+        <td>{{ question|getattr:"option" + question.correct_option|stringformat:"s" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

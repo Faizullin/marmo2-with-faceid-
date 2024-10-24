@@ -1,0 +1,22 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+  <h2>Курс әзірлеу</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Курс құру</button>
+  </form>
+
+
+  <style>
+  .custom-file-input {
+      cursor: pointer;
+  }
+  .custom-file-label::after {
+      content: "Шолу";
+  }
+  </style>
+{% endblock %}
+
+

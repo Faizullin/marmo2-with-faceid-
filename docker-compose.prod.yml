@@ -1,0 +1,66 @@
+# version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - database:/var/lib/postgresql/data/
+    env_file:
+      - .env
+  deepface_api:
+    build:
+      context: ./faceapi
+      dockerfile: Dockerfile.prod
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8001
+    volumes:
+      - deepface_api_storage:/app/face-id-storage
+      - deepface_api_weights:/app/weights
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - backend
+  backend:
+    build:
+      context: ./SecurityOrgTemp
+      dockerfile: Dockerfile.prod
+    command: python manage.py runserver 0.0.0.0:8000 --settings=backend.settings.prod
+    volumes:
+      - static:/app/public/static
+      - media:/app/public/media
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - /etc/letsencrypt:/etc/letsencrypt
+      - static:/app/public/static
+      - media:/app/public/media
+      # - ./certbot/www/:/var/www/certbot/:ro
+      # - ./certbot/conf/:/etc/nginx/ssl/:ro
+    env_file:
+      - .env
+    depends_on:
+      - backend
+      - deepface_api
+  # certbot:
+  #   image: certbot/certbot:latest
+  #   volumes:
+  #     - ./certbot/www/:/var/www/certbot/:rw
+  #     - ./certbot/conf/:/etc/letsencrypt/:rw
+volumes:
+  database:
+  deepface_api_storage:
+  deepface_api_weights:
+  static:
+  media:

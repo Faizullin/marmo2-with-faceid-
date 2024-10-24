@@ -1,0 +1,30 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<div class="container">
+  <h2>Результаты теста для {{ lecture.title }}</h2>
+
+  {% for student, result in students.items %}
+  <div class="card mb-3">
+    <div class="card-header">
+      {{ student.username }} - Правильные ответы: {{ result.correct }} из {{ result.total }}
+    </div>
+    <div class="card-body">
+      <ul>
+        {% for answer in result.answers %}
+        <li>
+          Вопрос: {{ answer.question.text }}<br>
+          Ответ: {{ answer.selected_option }}<br>
+          {% if answer.is_correct %}
+          <span class="text-success">Правильно</span>
+          {% else %}
+          <span class="text-danger">Неправильно</span> (Правильный ответ: {{ answer.question.correct_option }})
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

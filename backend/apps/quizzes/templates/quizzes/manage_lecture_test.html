@@ -1,0 +1,32 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+  <h2>Дәріс тестін іздеу: {{ lecture.title }}</h2>
+  
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Сұрақ қосу</button>
+  </form>
+  
+  <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">Курсқа оралу</a>
+  
+  <h3>Сұрақтар</h3>
+  <ul>
+    {% for question in questions %}
+      <li>
+        <p>{{ question.text }}</p>
+        <p>Нұсқалар:</p>
+        <ul>
+          <li>{{ question.option1 }}</li>
+          <li>{{ question.option2 }}</li>
+          <li>{{ question.option3 }}</li>
+          <li>{{ question.option4 }}</li>
+        </ul>
+        <p>Дұрыс нұсқа: {{ question.correct_option }} нұсқа</p>
+        <a href="{% url 'edit_question' course.id lecture.id question.id %}" class="btn btn-secondary">Өзгерту</a>
+        <a href="{% url 'delete_question' course.id lecture.id question.id %}" class="btn btn-danger">Жою</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

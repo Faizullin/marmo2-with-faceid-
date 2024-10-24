@@ -1,0 +1,65 @@
+{% extends 'users/base.html' %}
+{% load custom_filters %}
+{% block content %}
+  <style>
+    .content-section {
+      margin-bottom: 20px;
+    }
+    .navigation-buttons {
+      margin-top: 20px;
+    }
+  </style>
+  <h2 style="background-color: white;">{{ page.lecture.title }} - Page {{ page.page_number }}</h2>
+  {% if page.content %}
+    <div class="content-section" style="background-color: white;">
+      <h3>Конспект</h3>
+      <p style="font-size: 1.5rem">{{ page.content }}</p>
+    </div>
+  {% endif %}
+  {% if page.video_url %}
+    <div class="content-section">
+      <h3>Видеоконспект</h3>
+      <div class="embed-responsive embed-responsive-16by9" style="width: 560px; height: 315px;">
+        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ page.video_url|split:'='|last }}" allowfullscreen></iframe>
+      </div>
+    </div>
+  {% endif %}
+  {% if page.image %}
+    <div class="content-section">
+      <h3>Сурет</h3>
+      <img src="{{ page.image.url }}" alt="Image" class="img-fluid" style="max-width: 600px; max-height: 400px;">
+    </div>
+  {% endif %}
+  {% if page.files %}
+    <div class="content-section">
+        <h3>Танысуға арналған файлдар</h3>
+        <a href="{% url 'view_file' course_id=course.id lecture_id=lecture.id page_number=page_number pk=page.id %}">Файлды қарау</a>
+    </div>
+{% endif %}
+
+
+
+
+<script>
+function openFile(pageId) {
+    window.open('/view-file/' + pageId, '_blank');
+}
+</script>
+
+
+
+
+  <div class="navigation-buttons">
+    {% if page.page_number > 1 %}
+      <a href="{% url 'take_lecture_page' course.id lecture.id page.page_number|add:'-1' %}" class="btn btn-primary">Артқа</a>
+    {% endif %}
+    <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">Курсқа оралу</a>
+    {% if page.page_number < lecture.pages.count %}
+      <a href="{% url 'take_lecture_page' course.id lecture.id page.page_number|add:'1' %}" class="btn btn-primary">Алға</a>
+    {% else %}
+      {% if lecture.test_page %}
+        <a href="{% url 'take_lecture_test' course.id lecture.id %}" class="btn btn-primary">Тест тапсырыңыз</a>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endblock %}

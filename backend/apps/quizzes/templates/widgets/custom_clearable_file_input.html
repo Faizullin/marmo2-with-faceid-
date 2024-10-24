@@ -1,0 +1,5 @@
+{% load i18n %}
+<div class="custom-file">
+    <input type="file" name="{{ widget.name }}" class="custom-file-input" {% include "django/forms/widgets/attrs.html" %}>
+    <label class="custom-file-label" for="{{ widget.attrs.id }}">{{ widget.attrs.placeholder|default:_("Файлды таңдаңыз") }}</label>
+</div>

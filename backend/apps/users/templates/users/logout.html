@@ -1,0 +1,13 @@
+{% extends "users/base.html" %}
+{% block title %}Выход{% endblock title %}
+{% block content %}
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+        <h5 class="card-title">Сіз жүйеден шықтыңыз ба</h5>
+        <p class="card-text">
+            Уақытыңыз үшін рахмет, сұрақтар бойынша кез келген түсініктемелер немесе ұсыныстар үшін бізге хабарласыңыз
+        </p>
+        <br><hr><a href="{% url 'login' %}" class="btn btn-primary">Қайта кіру</a>
+        </div>
+    </div>
+{% endblock content %}

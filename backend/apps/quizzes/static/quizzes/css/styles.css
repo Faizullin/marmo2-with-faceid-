@@ -1,0 +1,418 @@
+/* Google font API */
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+:root {
+    --background-image: url("./background-image.jpg");
+    --instructions: rgba(255, 255, 255, 0.1);
+    --line-color: rgba(255, 255, 255, 0.5);
+    --text-color: rgb(64, 64, 64);
+    --progress-bar: rgba(255,207,175,1);
+    --box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+
+    /* Check Button */
+    --check-button: linear-gradient(90deg, rgba(255,223,202,1) 0%, rgba(255,207,175,1) 52%, rgba(255,191,148,1) 100%);
+    --check-button-hover: linear-gradient(270deg, rgba(255,223,202,1) 0%, rgba(255,207,175,1) 52%, rgba(255,191,148,1) 100%);
+
+    /* Next Button */
+    --next-button: linear-gradient(90deg, rgba(255,236,210,1) 0%, rgba(255,216,162,1) 59%, rgba(255,198,119,1) 100%);
+    --next-button-hover: linear-gradient(270deg, rgba(255,236,210,1) 0%, rgba(255,216,162,1) 59%, rgba(255,198,119,1) 100%);
+
+    /* Quit button */
+    --quit-button:  linear-gradient(90deg, rgba(247,201,198,1) 0%, rgba(246,165,160,1) 52%, rgba(255,131,123,1) 100%);
+    --quit-button-hover: linear-gradient(270deg, rgba(247,201,198,1) 0%, rgba(246,165,160,1) 52%, rgba(255,131,123,1) 100%);
+}
+
+/* Common padding */
+.p2 {
+    padding: 2%;
+}
+
+/* Common margin */
+.m2 {
+    margin: 2%;
+}
+
+/* Common border radius */
+.br1half {
+    border-radius: 1.5rem;
+}
+
+/* Do not display timer initially */
+.timer {
+    display: none;
+}
+
+/* All text color */
+h1, h2,h3, h4, p, span {
+    color: var(--text-color);
+}
+
+/* Main app */
+main {
+    margin: 0 auto;
+    width: 85%;
+    background-image: var(--background-image);
+    background-size: cover;
+    background-repeat: no-repeat;
+    box-shadow: var(--box-shadow);
+}
+
+.main-quiz {
+    display: none;
+}
+
+/* Header section */
+header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--line-color);
+    align-items: center;
+}
+
+/* Get started section & Final score */
+.get-started, .final-score {
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.get-started > *, .final-score > * {
+    text-align: center;
+    margin: 0 10%;
+}
+
+.instructions, .display-score {
+    background: var(--instructions);
+    margin-bottom: 5%;
+    padding: 4%;
+    backdrop-filter: blur(2px);
+}
+
+.start-button {
+    background: var(--check-button);
+    box-shadow: var(--box-shadow);
+    cursor:pointer;
+    border-style: none;
+    width: 60%;
+    margin-bottom: 5%;
+}
+
+.start-button:hover {
+    background: var(--check-button-hover);
+}
+
+/* Other Final score style */
+.final-score {
+    display: none;
+    height: 80vh;
+}
+
+.score-quit {
+    width: 60%;
+    margin: 0 auto;
+    border-style: none;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+}
+
+/* Progress section */
+.progress-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1% 2%;
+    box-shadow: var(--box-shadow);
+    border-style: none;
+}
+
+.progress-bar {
+    width: 70%;
+    accent-color: var(--progress-bar);
+}
+
+/* Questions */
+#option-1, #option-2, #option-3, #option-4 {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 3% 0;
+    border-style: none;
+    cursor: pointer;
+    background: var(--line-color);
+    box-shadow: var(--box-shadow);
+    backdrop-filter:blur(2px);
+    text-align: left;
+}
+
+/* Footer Buttons */
+footer {
+    display: flex;
+    flex-direction: column;
+}
+
+footer > button {
+    width: 30%;
+    margin: 2% auto;
+    border-style: none;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+}
+
+.check-answer {
+    background: var(--check-button);
+}
+
+.check-answer:hover {
+    background: var(--check-button-hover);
+}
+
+.next-question, .finish-quiz {
+    background: var(--next-button);
+    display: none;
+}
+
+.next-question:hover, .finish-quiz:hover {
+    background: var(--next-button-hover);
+}
+
+.quit-quiz {
+    background: var(--quit-button);
+}
+
+.quit-quiz:hover {
+    background: var(--quit-button-hover);
+}
+
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+form {
+    width: 50%;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #3e8e41;
+}
+
+/* Add styles for the new create lecture page */
+
+form {
+    width: 600px;
+    margin: auto;
+}
+
+#questions {
+    margin-top: 20px;
+}
+
+.question-form {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+button {
+    display: block;
+    margin: 10px auto;
+}
+
+textarea {
+    width: 100%;
+    margin-top: 10px;
+}
+
+input[type="url"] {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.fixed-size-image {
+    width: 250px;  /* Set your desired width */
+    height: 250px; /* Set your desired height */
+    object-fit: cover; /* This ensures the image covers the entire area without stretching */
+}
+
+/* quiz list */
+.quiz-item {
+    display: flex;
+    flex-direction: row; /* Ensure items are in a row */
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.quiz-image {
+    width: 250px; /* Set the desired width */
+    height: 250px; /* Set the desired height */
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 10px; /* Add some space between image and text */
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1; /* Ensure card-body takes the remaining space */
+}
+
+.card-title {
+    font-size: 1.5rem; /* Adjust font size as needed */
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 1rem; /* Adjust font size as needed */
+    margin-bottom: 15px;
+}
+
+.btn-primary {
+    font-size: 1rem;
+}
+
+
+.course-image {
+  width: 100%; /* Adjust this value as needed */
+  max-width: 300px; /* Set a max-width to constrain the size */
+  height: auto; /* Maintain the aspect ratio */
+  margin: 0 auto; /* Center the image */
+}
+
+.course-detail-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.course-title {
+    font-size: 60px;
+    margin-bottom: 10px;
+}
+
+.course-description {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.lecture-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.lecture-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.lecture-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.lecture-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.lecture-actions .delete-lecture {
+    color: #d9534f;
+    text-decoration: none;
+}
+
+.lecture-details {
+    font-size: 14px;
+}
+
+.add-lecture-button {
+    margin-top: 20px;
+}
+
+
+/* courses related */
+
+.course-list-container {
+    padding: 20px;
+}
+
+.course-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.course-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.course-header {
+    display: flex;
+    flex-direction: column;
+}
+
+.course-header h3 {
+    margin: 0;
+}
+
+.course-header p {
+    margin: 10px 0;
+}
+
+.course-header .btn {
+    align-self: start;
+}

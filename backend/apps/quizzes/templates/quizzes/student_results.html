@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Results</title>
+</head>
+<body>
+    <h1>Student Results</h1>
+    {% for student, answers in student_results.items %}
+        <div>
+            <h2>{{ student.username }}</h2>
+            {% for answer in answers %}
+                <div>
+                    <p>Question: {{ answer.question.text }}</p>
+                    <p>Answer: {{ answer.selected_option }} - {% if answer.is_correct %}Correct{% else %}Incorrect{% endif %}</p>
+                    {% if not answer.is_correct %}
+                        <p>Correct answer: {{ answer.question.correct_option }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</body>
+</html>

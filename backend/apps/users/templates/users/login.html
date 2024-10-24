@@ -1,0 +1,146 @@
+{% extends "users/base.html" %}
+{% block title %} Страница входа {% endblock title %}
+{% block content %}
+    <style>
+        .login-container {
+            margin-top: 5%;
+            margin-bottom: 5%;
+        }
+
+        .login-card {
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px; /* Smaller border radius */
+            max-width: 700px; /* Limit the maximum width of the card */
+            margin: auto; /* Center the card horizontally */
+        }
+
+        .login-card .form-control {
+            border-radius: 8px; /* Smaller border radius */
+            width: 100%; /* Ensure the input fields take full width */
+        }
+
+        .login-card .btn-dark {
+            border-radius: 8px; /* Smaller border radius */
+            width: 100%; /* Ensure the button takes full width */
+        }
+
+        .login-card-footer {
+            background: none;
+        }
+
+        .login-card-footer a {
+            color: #007bff;
+        }
+
+        .login-card-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .login-form {
+            padding: 1rem 2rem;
+            max-width: 400px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .login-form .form-check {
+            margin-bottom: 1rem;
+        }
+    </style>
+    <div class="container login-container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card login-card">
+                    <h5 class="card-header text-center">Жүйеге кіру</h5>
+                    {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <div id="form_errors">
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <strong>{{ error }}</strong><br>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    <strong>{{ error }}</strong><br>
+                                {% endfor %}
+                            </div>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'login' %}" class="login-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="username">Қолданушының аты</label>
+                                <input type="text" name="username" class="form-control" id="username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Құпия сөз</label>
+                                <input type="password" name="password" class="form-control" id="password" required>
+                            </div>
+                            <!--<div class="form-group form-check">
+                                <input type="checkbox" name="remember_me" class="form-check-input" id="remember_me">
+                                <label class="form-check-label" for="remember_me">Запомнить меня</label>
+                            </div> -->
+                            <button type="submit" class="btn btn-dark btn-block">Жүйеге кіру</button>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center login-card-footer">
+                        <div class="medium" style="display: flex; justify-content: space-between">
+                            <a href="{% url 'users-register' %}">Тіркелу</a><br>
+                            <a href="{% url 'password_reset' %}">Құпия сөзді ұмыттыңыз ба?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="card login-card" style="margin-top: 30%;">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#qrLoginModal">QR
+                            код бойынша кіру
+                        </button>
+                    </div>
+                </div>
+                <div class="card login-card" style="margin-top: 10%;">
+                    <div class="col-md-6">
+                        <a type="button" class="btn btn-secondary" href="{% url 'face-id-auth' %}">Биометриялық тәсілмен
+                            тіркелу</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for QR Login -->
+    <div class="modal fade" id="qrLoginModal" tabindex="-1" role="dialog" aria-labelledby="qrLoginModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrLoginModalLabel">QR код бойынша кіру</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="qrLoginForm" method="post" action="{% url 'send_qr_code' %}"
+                          style="max-width: 100%; margin: auto;">
+                        {% csrf_token %}
+                        <div class="form-group" style="max-width: 100%px; margin: auto;">
+                            <label for="email">Электрондық пошта</label>
+                            <input type="email" class="form-control" id="email" name="email" required
+                                   style="max-width: 100%;">
+                        </div>
+                        <button type="submit" class="btn btn-primary"
+                                style="max-width: 50%; margin-top: 10px; display: block;">Жіберу
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

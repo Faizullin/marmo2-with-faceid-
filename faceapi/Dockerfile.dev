@@ -1,0 +1,27 @@
+FROM orgoro/dlib-opencv-python
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+ENV HOME=/app
+WORKDIR $HOME
+RUN mkdir $HOME/app
+RUN mkdir $HOME/face-id-storage
+RUN mkdir $HOME/face-id-storage/models
+RUN mkdir $HOME/weights
+
+RUN apt-get update && \
+    apt install -y git \
+                   poppler-utils \
+                   python3-pip \
+                   python3-opencv \
+                   tesseract-ocr
+
+RUN pip install --trusted-host pypi.python.org --upgrade pip
+RUN python3 -m pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu torch torchvision
+
+COPY requirements.dev.txt $HOME/requirements.txt
+RUN pip install --trusted-host pypi.python.org  -r requirements.txt
+
+COPY ./app $HOME/app
+COPY ./weights $HOME/weights

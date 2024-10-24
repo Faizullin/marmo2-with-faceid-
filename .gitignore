@@ -1,0 +1,19 @@
+logs
+*.log
+.env
+.venv
+.venv/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+frontend-admin1
+node_modules

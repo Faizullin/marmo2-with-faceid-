@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Простой тест</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'quizzes/css/styles.css' %}" />
+  </head>
+  <body>
+    <main class="br1half">
+      <!-- Header - Title & Time Countdown -->
+      <header class="p2 m2">
+        <h1>Простой тест</h1>
+        <div class="timer">
+          <h4>Осталось времени: <span>15</span></h4>
+        </div>
+      </header>
+      <!-- Get started page - Instructions -->
+      <section class="get-started">
+        <div class="instructions br1half">
+          <h2>Нажмите кнопку ниже, чтобы начать тест.</h2>
+          <p class="p2">
+            У вас будет 15 секунд на выполнение каждого вопроса. Всего будет 5 вопросов.
+          </p>
+          <h3 class="p2">Удачи!</h3>
+        </div>
+        <button id="start-btn" type="button" class="start-button p2 m2 br1half">
+          Начать
+        </button>
+      </section>
+      <!-- Main quiz body -->
+      <section class="main-quiz">
+        <!-- Progress - Bar in percent & Display question count -->
+        <section class="progress-container m2 br1half">
+          <progress class="progress-bar p2" value="0" max="100"></progress>
+          <p>
+            Вопрос <span class="current-question">0</span> из
+            <span class="total-questions">20</span>
+          </p>
+        </section>
+        <!-- Questions & Answers -->
+        <section class="qa-container p2 m2">
+          <h2 id="question">Что означает HTML?</h2>
+          <div class="option-buttons">
+            <button
+              data-index="0"
+              id="option-1"
+              type="button"
+              class="p2 br1half option"
+              onclick="optionClicked(this)"
+            >
+              ...
+            </button>
+            <button
+              data-index="1"
+              id="option-2"
+              type="button"
+              class="p2 br1half option"
+              onclick="optionClicked(this)"
+            >
+              ...
+            </button>
+            <button
+              data-index="2"
+              id="option-3"
+              type="button"
+              class="p2 br1half option"
+              onclick="optionClicked(this)"
+            >
+              ...
+            </button>
+            <button
+              data-index="3"
+              id="option-4"
+              type="button"
+              class="p2 br1half option"
+              onclick="optionClicked(this)"
+            >
+              ...
+            </button>
+          </div>
+        </section>
+        <!-- Footer buttons -->
+        <footer class="p2 m2">
+          <button type="button" class="check-answer p2 br1half">
+            Проверить ответ
+          </button>
+          <button type="button" class="next-question p2 br1half">
+            Следующий вопрос
+          </button>
+          <button type="button" class="finish-quiz p2 br1half" onclick="finishQuiz()">
+            Завершить тест
+          </button>
+          <button type="button" class="quit-quiz p2 br1half">Выйти из теста</button>
+        </footer>
+      </section>
+      <!-- Score page -->
+      <section class="final-score">
+        <div class="display-score br1half">
+          <h2>Ваши правильные ответы:</h2>
+          <span class="my-score">0</span> из
+          <span class="total-score">20</span>
+          <h3 class="p2">Отлично!</h3>
+        </div>
+        <button id="restart-btn" type="button" class="start-button p2 br1half">
+          Перезапустить тест
+        </button>
+        <button type="button" class="quit-quiz score-quit p2 br1half">
+          Выйти из теста
+        </button>
+      </section>
+    </main>
+
+    <!-- Form to submit the quiz results -->
+    <form id="quiz-result-form" method="post" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="score" id="quiz-score" />
+        <input type="hidden" name="total_questions" id="total-questions" />
+    </form>
+
+    <!-- Local JavaScript file -->
+    <script src="{% static 'quizzes/js/script.js' %}"></script>
+
+    <script>
+      function submitQuizResults(score, totalQuestions) {
+          document.getElementById('quiz-score').value = score;
+          document.getElementById('total-questions').value = totalQuestions;
+          document.getElementById('quiz-result-form').submit();
+      }
+
+      function finishQuiz() {
+          // Assume these values are calculated during the quiz
+          var score = 18; // Replace with actual score calculation
+          var totalQuestions = 20; // Replace with actual total questions
+
+          submitQuizResults(score, totalQuestions);
+      }
+    </script>
+  </body>
+</html>

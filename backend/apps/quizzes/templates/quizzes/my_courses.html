@@ -1,0 +1,35 @@
+{% extends 'users/base.html' %}
+
+
+{% block content %}
+<div class="course-list-container">
+    <h2>Менің курстарым</h2>
+    <div class="row">
+        {% for applied in applied_courses %}
+        <div class="col-md-12">
+            <div class="course-item row position-relative" style="padding-bottom: 10px;"> <!-- Место для кнопок -->
+                {% if applied.course.image %}
+                <div class="col-md-3">
+                    <img src="{{ applied.course.image.url }}" alt="{{ applied.course.name }}" style="width: 100%; max-height: 170px;">
+                </div>
+                {% endif %}
+                <div class="col-md-9 position-relative">
+                    <h3>{{ applied.course.name }}</h3>
+                    <p style="padding-bottom: 60px;">{{ applied.course.description|truncatechars:50 }}</p>
+                    <div class="position-absolute" style="bottom: 0px; left: 15px;">
+                        <a href="{% url 'course_detail' applied.course.id %}" class="btn btn-primary" style="width: 140px;">Курсты қарау</a>
+                    </div>
+                    <div class="position-absolute" style="right: 0; bottom: 10px;">
+                        {% if applied.course.surveys.exists %}
+                            <a href="{{ course.surveys.first.survey_link }}" class="btn btn-primary" style="width: 140px;" target="_blank">Сауалнама</a>
+                        {% else %}
+                            <span class="btn btn-secondary" style="width: 140px;">Сауалнама жоқ</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

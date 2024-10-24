@@ -1,0 +1,52 @@
+# base image
+FROM python:3.8.12
+LABEL org.opencontainers.image.source=https://github.com/serengil/deepface
+
+# -----------------------------------
+# create required folder
+ENV HOME=/app
+RUN mkdir $HOME
+RUN mkdir $HOME/deepface
+
+# -----------------------------------
+# switch to application directory
+WORKDIR $HOME
+RUN mkdir $HOME/.deepface
+RUN mkdir $HOME/.deepface/weights
+
+# -----------------------------------
+# update image os
+RUN apt-get update
+RUN apt-get install ffmpeg libsm6 libxext6 -y
+
+# -----------------------------------
+# Copy required files from repo into image
+COPY ./deepface $HOME/deepface
+# even though we will use local requirements, this one is required to perform install deepface from source code
+# COPY ./api_v2/requirements.txt $HOME/requirements.txt
+COPY ./requirements.txt $HOME/requirements.txt
+COPY ./requirements_local $HOME/requirements_local.txt
+COPY ./package_info.json $HOME/
+COPY ./setup.py $HOME/
+COPY ./README.md $HOME/
+# COPY ./api_v2/app $HOME/app
+
+# -----------------------------------
+# if you plan to use a GPU, you should install the 'tensorflow-gpu' package
+# RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org tensorflow-gpu
+
+# if you plan to use face anti-spoofing, then activate this line
+RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org torch==2.1.2
+# -----------------------------------
+# install deepface from pypi release (might be out-of-date)
+# RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org deepface
+# -----------------------------------
+# install dependencies - deepface with these dependency versions is working
+RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org -r $HOME/requirements_local.txt
+# install deepface from source code (always up-to-date)
+RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org -e .
+
+# RUN pip install -r requirements.txt
+
+# environment variables
+ENV PYTHONUNBUFFERED=1

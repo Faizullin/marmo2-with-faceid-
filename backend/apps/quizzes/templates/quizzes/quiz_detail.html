@@ -1,0 +1,47 @@
+{% extends 'users/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<h2>{{ quiz.title }}</h2>
+<p>{{ quiz.description }}</p>
+
+{% if quiz.conspect %}
+    <h3>Конспект</h3>
+    <p>{{ quiz.conspect }}</p>
+{% endif %}
+
+{% if quiz.video_conspect %}
+    <h3>Видеоконспект</h3>
+    <div class="embed-responsive embed-responsive-16by9" style="width: 560px; height: 315px;">
+        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ quiz.video_conspect|split:'='|last }}" allowfullscreen></iframe>
+    </div>
+{% endif %}
+
+<h3>Вопросы</h3>
+<form method="POST">
+    {% csrf_token %}
+    {% for question in quiz.questions.all %}
+        <div class="question">
+            <p><strong>{{ forloop.counter }}. {{ question.text }}</strong></p>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="question{{ forloop.counter }}" id="option1{{ forloop.counter }}" value="1">
+                <label class="form-check-label" for="option1{{ forloop.counter }}">{{ question.option1 }}</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="question{{ forloop.counter }}" id="option2{{ forloop.counter }}" value="2">
+                <label class="form-check-label" for="option2{{ forloop.counter }}">{{ question.option2 }}</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="question{{ forloop.counter }}" id="option3{{ forloop.counter }}" value="3">
+                <label class="form-check-label" for="option3{{ forloop.counter }}">{{ question.option3 }}</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="question{{ forloop.counter }}" id="option4{{ forloop.counter }}" value="4">
+                <label class="form-check-label" for="option4{{ forloop.counter }}">{{ question.option4 }}</label>
+            </div>
+        </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

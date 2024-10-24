@@ -1,0 +1,63 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<style>
+  .results-container {
+    padding: 20px;
+  }
+  .results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .results-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  .results-item {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  .results-item .question {
+    font-weight: bold;
+  }
+  .results-item .answer {
+    margin-top: 5px;
+  }
+  .results-item .correct {
+    color: green;
+  }
+  .results-item .incorrect {
+    color: red;
+  }
+  .back-button {
+    margin-top: 20px;
+  }
+</style>
+
+<div class="container results-container">
+  <div class="results-header">
+    <h2>Дәріске арналған тест нәтижелері: {{ lecture.title }}</h2>
+    <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">Курсқа оралу</a>
+  </div>
+  <p>Дұрыс жауаптар: {{ correct_answers }} из {{ total_questions }}</p>
+
+  <ul class="results-list">
+    {% for answer in answers %}
+    <li class="results-item">
+      <div class="question">Сұрақ: {{ answer.question.text }}</div>
+      <div class="answer">Сіздің жауабыңыз: {{ answer.selected_option }}</div>
+      {% if answer.is_correct %}
+      <div class="correct">Дұрыс</div>
+      {% else %}
+      <div class="incorrect">Дұрыс емес (Дұрыс жауап: {{ answer.question.correct_option }})</div>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

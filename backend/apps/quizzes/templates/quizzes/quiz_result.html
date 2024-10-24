@@ -1,0 +1,20 @@
+{% extends 'users/base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<h2>Результаты для {{ lecture.title }}</h2>
+<p>Вы правильно ответили на {{ correct_answers }} из {{ total_questions }} вопросов.</p>
+
+<h3>Ваши ответы:</h3>
+<ul>
+    {% for question, user_answer in user_answers %}
+        <li>
+            <strong>{{ question.text }}</strong><br>
+            Ваш ответ: {{ question|get_option:user_answer }}<br>
+            Правильный ответ: {{ question|get_option:question.correct_option }}
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'course_detail' lecture.course.id %}" class="btn btn-primary">Вернуться к курсу</a>
+{% endblock %}

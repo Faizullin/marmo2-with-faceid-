@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Take Lecture Test</title>
+</head>
+<body>
+    <h1>Lecture Test</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% for question in questions %}
+            <div>
+                <p>{{ question.text }}</p>
+                {% for option in question.options %}
+                    <input type="radio" name="question_{{ question.id }}" value="{{ option }}" id="question_{{ question.id }}_{{ option }}">
+                    <label for="question_{{ question.id }}_{{ option }}">{{ option }}</label><br>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

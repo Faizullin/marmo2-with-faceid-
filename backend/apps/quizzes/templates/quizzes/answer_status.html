@@ -1,0 +1,25 @@
+{% extends 'users/base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<h2>Проверьте ответы для {{ lecture_page.lecture.title }}</h2>
+
+<ul>
+    {% for question, user_answer in user_answers %}
+        <li>
+            {% if user_answer is not None %}
+                Ответ сохранен: {{ user_answer }}
+            {% else %}
+                Не дан ответ на вопрос {{ forloop.counter }}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary" name="confirm">Отправить</button>
+</form>
+
+<a href="{% url 'course_detail' lecture_page.lecture.course.id %}" class="btn btn-primary">Вернуться к курсу</a>
+{% endblock %}

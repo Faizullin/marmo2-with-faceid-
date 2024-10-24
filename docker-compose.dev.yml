@@ -1,0 +1,66 @@
+# version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - database:/var/lib/postgresql/data/
+    env_file:
+      - .env
+  deepface_api:
+    build:
+      context: ./faceapi
+      dockerfile: Dockerfile.dev
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
+    volumes:
+      - ./faceapi/app:/app/app
+      - deepface_api_storage:/app/face-id-storage
+      - deepface_api_weights:/app/weights
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - backend
+  # deepface_api:
+  #   build:
+  #     context: ./deepface
+  #     dockerfile: Dockerfile.prod
+  #   command: uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.5'
+  #   volumes:
+  #     - ./deepface/api_v2/app:/app/app
+  #     - deepface_api_storage:/app/face-id-storage
+  #     - deepface_api_weights:/app/.deepface/weights
+  #   ports:
+  #     - "8001:8001"
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - db
+  #     - backend
+  backend:
+    build:
+      context: ./SecurityOrgTemp
+      dockerfile: Dockerfile.dev
+    command: python manage.py runserver 0.0.0.0:8000 --settings=backend.settings.local
+    volumes:
+      - ./SecurityOrgTemp:/app
+      - static:/app/public/static
+      - media:/app/public/media
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+volumes:
+  database:
+  deepface_api_storage:
+  deepface_api_weights:
+  static:
+  media:

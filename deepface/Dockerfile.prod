@@ -1,0 +1,21 @@
+FROM faizullin/antispoof-deepface:latest
+
+# -----------------------------------
+# create required folder
+ENV HOME=/app
+
+# -----------------------------------
+# switch to application directory
+WORKDIR $HOME
+RUN mkdir $HOME/app
+
+# -----------------------------------
+# Copy required files from repo into image
+COPY ./api_v2/requirements.api.txt $HOME/requirements.api.txt
+COPY ./api_v2/app $HOME/app
+
+
+RUN pip install --no-cache-dir  -r requirements.api.txt
+
+# environment variables
+ENV PYTHONUNBUFFERED=1
